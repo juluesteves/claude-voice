@@ -6,6 +6,8 @@ import type { VoicePhase } from '../types'
 const phase = atom({ plugin: 'dictation', key: 'phase' } as const, 'idle' as VoicePhase)
 const partial = atom({ plugin: 'dictation', key: 'partial' } as const, '')
 const lastText = atom({ plugin: 'dictation', key: 'lastText' } as const, '')
+// Language detected in the last transcribed segment; the band follows it.
+const lang = atom({ plugin: 'dictation', key: 'lang' } as const, '')
 
 type Strings = {
   labels: Record<VoicePhase, string>
@@ -29,7 +31,7 @@ type Strings = {
   commandDescription: string
 }
 
-const STRINGS: Record<'en' | 'pt', Strings> = {
+const STRINGS: Record<'en' | 'pt' | 'es', Strings> = {
   en: {
     labels: {
       idle: '🎤 voice stopped',
@@ -86,12 +88,41 @@ const STRINGS: Record<'en' | 'pt', Strings> = {
     pythonFailed: 'não consegui iniciar o Python',
     commandDescription: 'Voz: inicia o processo de ditado ou alterna gravar/parar (a rodinha do mouse faz o mesmo)',
   },
+  es: {
+    labels: {
+      idle: '🎤 voz detenida',
+      loading: '🎤 Preparando la voz (cargando el modelo)…',
+      ready: '🎤 Listo. Haz clic en la rueda del ratón para hablar.',
+      recording: '🔴 Grabando… rueda: parar · doble clic: enviar',
+      paused: '⏸ En pausa. Rueda: continuar · doble clic: enviar',
+      transcribing: '🎤 Transcribiendo el fragmento…',
+    },
+    start: '🎤 Iniciar voz',
+    notRunning: ' el proceso de voz no está en ejecución',
+    speak: '🎤 Hablar',
+    speakHint: ' o haz clic en la rueda del ratón · doble clic envía',
+    stop: 'Parar',
+    resume: 'Continuar',
+    send: 'Enviar',
+    cancel: 'Cancelar',
+    placeholder: '(el texto reconocido aparece aquí)',
+    starting: 'Iniciando la voz… cuando esté listo, haz clic en la rueda del ratón para hablar.',
+    pausedMsg: 'Grabación en pausa.',
+    recordingMsg: 'Grabando… haz clic en la rueda (o /dictate) para parar; doble clic envía.',
+    stillLoading: 'Voz: todavía cargando…',
+    cancelled: 'Voz: dictado descartado.',
+    nothing: 'Voz: nada que enviar.',
+    processStopped: 'Voz: el proceso de voz se detuvo.',
+    pythonFailed: 'no se pudo iniciar Python',
+    commandDescription: 'Voz: inicia el proceso de dictado o alterna grabar/parar (la rueda del ratón hace lo mismo)',
+  },
 }
 
 type Action = 'send' | 'cancel'
 type Line =
   | { status: VoicePhase }
   | { partial: string }
+  | { language: string }
   | { text: string; action: Action }
   | { error: string }
   | { log: string }
@@ -105,19 +136,25 @@ type Settings = {
   cancelWords: string
 }
 
+/** Strings in the language of the last segment, or the configured one. */
+async function tr($: EngineInterface, s: Settings): Promise<Strings> {
+  const detected = await read($, lang)
+  return (STRINGS as Record<string, Strings>)[detected] ?? s.t
+}
+
 function signalPath($: EngineInterface): string {
   return `${$.plugin.root}/scripts/.voice-signal`
 }
 
 async function setPhase($: EngineInterface, s: Settings, p: VoicePhase): Promise<void> {
   await update($, phase, () => p)
-  $.ui.status(p === 'idle' || p === 'ready' ? undefined : s.t.labels[p])
+  $.ui.status(p === 'idle' || p === 'ready' ? undefined : (await tr($, s)).labels[p])
 }
 
 async function signal($: EngineInterface, s: Settings, cmd: 'toggle' | 'send' | 'cancel'): Promise<void> {
   const p = await read($, phase)
   if (p === 'idle' || p === 'loading') {
-    $.ui.toast(p === 'idle' ? s.t.labels.idle : s.t.stillLoading)
+    $.ui.toast(p === 'idle' ? (await tr($, s)).labels.idle : (await tr($, s)).stillLoading)
     return
   }
   await $.fs.write(signalPath($), cmd)
@@ -127,11 +164,11 @@ async function deliver($: EngineInterface, s: Settings, done: { text: string; ac
   const text = done.text.trim()
   await update($, partial, () => '')
   if (done.action === 'cancel') {
-    $.ui.toast(text ? s.t.cancelled : s.t.nothing)
+    $.ui.toast(text ? (await tr($, s)).cancelled : (await tr($, s)).nothing)
     return
   }
   if (!text) {
-    $.ui.toast(s.t.nothing)
+    $.ui.toast((await tr($, s)).nothing)
     return
   }
   await update($, lastText, () => text)
@@ -175,6 +212,8 @@ async function runDaemon($: EngineInterface, s: Settings): Promise<void> {
       await setPhase($, s, parsed.status)
     } else if ('partial' in parsed) {
       await update($, partial, () => parsed.partial)
+    } else if ('language' in parsed) {
+      await update($, lang, () => parsed.language)
     } else if ('text' in parsed) {
       await deliver($, s, parsed)
     } else if ('error' in parsed) {
@@ -195,7 +234,7 @@ async function runDaemon($: EngineInterface, s: Settings): Promise<void> {
     }
     await handle(buffer)
   } catch (err) {
-    failed = `${s.t.pythonFailed}: ${String(err)}`
+    failed = `${(await tr($, s)).pythonFailed}: ${String(err)}`
   }
 
   await setPhase($, s, 'idle')
@@ -205,7 +244,7 @@ async function runDaemon($: EngineInterface, s: Settings): Promise<void> {
     $.ui.toast(`Voice: ${reason}`)
   } else if (stderr.trim()) {
     const tail = stderr.trim().split('\n').slice(-2).join(' ')
-    $.ui.toast(`${s.t.processStopped} ${tail}`)
+    $.ui.toast(`${(await tr($, s)).processStopped} ${tail}`)
   }
 }
 
@@ -221,7 +260,7 @@ export const register: Register = (on, options) => {
   }
 
   on('session.start', async ($, e, next) => {
-    await $.command.register({ name: 'dictate', description: s.t.commandDescription })
+    await $.command.register({ name: 'dictate', description: (await tr($, s)).commandDescription })
     const started = await next(e)
     if (e.isInteractive) void runDaemon($, s)
     return started
@@ -239,17 +278,17 @@ export const register: Register = (on, options) => {
     const p = await read($, phase)
     if (p === 'idle') {
       void runDaemon($, s)
-      return { text: s.t.starting }
+      return { text: (await tr($, s)).starting }
     }
     await signal($, s, 'toggle')
-    return { text: p === 'recording' ? s.t.pausedMsg : s.t.recordingMsg }
+    return { text: p === 'recording' ? (await tr($, s)).pausedMsg : (await tr($, s)).recordingMsg }
   })
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     if (e.props.hasSurvey) return next(e)
     const { Box, Button, Text } = $.ui.resolve(e)
     const p = await read($, phase)
-    const t = s.t
+    const t = await tr($, s)
 
     if (p === 'idle') {
       return (

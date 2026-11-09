@@ -12,6 +12,7 @@
 Saida: uma linha JSON por evento em stdout:
   {"status": "loading"|"ready"|"recording"|"paused"|"transcribing"}
   {"partial": "texto acumulado"}
+  {"language": "pt"}                       idioma detectado no ultimo trecho
   {"text": "...", "action": "send"|"cancel"}
   {"error": "..."}
   {"log": "..."}
@@ -126,7 +127,9 @@ class Daemon:
             return ""
         emit(status="transcribing")
         piece = transcribe(self.model, audio, self.a.language)
-        log(f"trecho {len(audio)/SAMPLE_RATE:.1f}s -> {piece!r}")
+        log(f"trecho {len(audio)/SAMPLE_RATE:.1f}s [{voice.last_language}] -> {piece!r}")
+        if piece and voice.last_language:
+            emit(language=voice.last_language)
         return piece
 
     def stop_recording(self):

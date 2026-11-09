@@ -125,15 +125,22 @@ def load_model(name: str):
     return WhisperModel(name, device="cpu", compute_type="int8")
 
 
+last_language = ""  # idioma detectado no ultimo trecho (codigo ISO)
+
+
 def transcribe(model, audio: np.ndarray, language: str) -> str:
-    segments, _info = model.transcribe(
+    global last_language
+    segments, info = model.transcribe(
         audio,
         language=None if language in ("", "auto") else language,
         beam_size=5,
         vad_filter=True,
         condition_on_previous_text=False,
     )
-    return " ".join(s.text.strip() for s in segments).strip()
+    text = " ".join(s.text.strip() for s in segments).strip()
+    if text and getattr(info, "language", None):
+        last_language = info.language
+    return text
 
 
 def join(acc: str, piece: str) -> str:
