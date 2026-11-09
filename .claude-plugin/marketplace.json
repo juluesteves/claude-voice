@@ -1,0 +1,16 @@
+{
+  "name": "julu-plugins",
+  "owner": { "name": "JuLu", "url": "https://github.com/juluesteves" },
+  "description": "Plugins and mods for Claude Code by JuLu",
+  "plugins": [
+    {
+      "name": "voice",
+      "displayName": "Claude Voice",
+      "source": "./",
+      "description": "Speak instead of typing: hands-free dictation controlled by the mouse wheel button, transcribed locally with faster-whisper in any language",
+      "version": "0.2.0",
+      "category": "productivity",
+      "tags": ["voice", "dictation", "speech-to-text", "whisper", "accessibility", "hands-free"]
+    }
+  ]
+}

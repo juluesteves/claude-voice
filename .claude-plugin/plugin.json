@@ -1,0 +1,73 @@
+{
+  "name": "voice",
+  "version": "0.2.0",
+  "description": "Speak instead of typing: hands-free dictation controlled by the mouse wheel button, transcribed locally with faster-whisper in any language",
+  "license": "MIT",
+  "author": {
+    "name": "JuLu",
+    "url": "https://github.com/juluesteves"
+  },
+  "homepage": "https://github.com/juluesteves/claude-voice",
+  "repository": "https://github.com/juluesteves/claude-voice",
+  "keywords": [
+    "voice",
+    "dictation",
+    "speech-to-text",
+    "whisper",
+    "faster-whisper",
+    "accessibility",
+    "hands-free",
+    "mod"
+  ],
+  "icon": "./.claude-plugin/icon.png",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "ui": {
+      "type": "string",
+      "title": "Interface language",
+      "description": "Language of the band, toasts and command output",
+      "default": "en",
+      "options": [
+        "en",
+        "pt"
+      ]
+    },
+    "language": {
+      "type": "string",
+      "title": "Speech language",
+      "description": "ISO code of the spoken language (pt, en, es, ...), or 'auto' to detect it on each segment",
+      "default": "auto"
+    },
+    "model": {
+      "type": "string",
+      "title": "Model",
+      "description": "faster-whisper model (bigger = more accurate, slower on CPU)",
+      "default": "small",
+      "options": [
+        "tiny",
+        "base",
+        "small",
+        "medium",
+        "large-v3"
+      ]
+    },
+    "silence": {
+      "type": "string",
+      "title": "Pause (s)",
+      "description": "Seconds of silence that close a segment while recording (never ends the dictation)",
+      "default": "1.2"
+    },
+    "sendWords": {
+      "type": "string",
+      "title": "Extra send words",
+      "description": "Comma-separated spoken words that send the text, added to the built-in ones (send, enviar, envoyer, senden, invia...)",
+      "default": ""
+    },
+    "cancelWords": {
+      "type": "string",
+      "title": "Extra cancel words",
+      "description": "Comma-separated spoken words that discard the text, added to the built-in ones (cancel, cancelar, annuler, abbrechen, annulla...)",
+      "default": ""
+    }
+  }
+}
