@@ -3,9 +3,9 @@ import type { EngineInterface, Register } from 'claude-code'
 
 import type { VoicePhase } from '../types'
 
-const phase = atom({ plugin: 'voice', key: 'phase' } as const, 'idle' as VoicePhase)
-const partial = atom({ plugin: 'voice', key: 'partial' } as const, '')
-const lastText = atom({ plugin: 'voice', key: 'lastText' } as const, '')
+const phase = atom({ plugin: 'dictation', key: 'phase' } as const, 'idle' as VoicePhase)
+const partial = atom({ plugin: 'dictation', key: 'partial' } as const, '')
+const lastText = atom({ plugin: 'dictation', key: 'lastText' } as const, '')
 
 type Strings = {
   labels: Record<VoicePhase, string>

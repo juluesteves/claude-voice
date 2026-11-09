@@ -1,7 +1,7 @@
 import { expect, test } from 'claude-code/testing'
 
 const BAND = {
-  plugin: 'voice',
+  plugin: 'dictation',
   component: 'AbovePrompt',
   requestId: 'above-prompt',
   props: { hasSurvey: false, isWorking: false, bodyColumns: 80 },
@@ -89,7 +89,7 @@ test('os botões da faixa escrevem o sinal para o processo', async ($, on) => {
   on('state.get', (_, e) => (e.key === 'phase' ? { value: { value: 'ready', version: 1 } } : { value: { value: '', version: 1 } }))
 
   const ui = await $.ui.mount({ ...BAND, surface: 'terminal' })
-  await ui.press({ plugin: 'voice', key: 'gravar' })
+  await ui.press({ plugin: 'dictation', key: 'gravar' })
   await ui.unmount()
 
   expect(seen.signals).toEqual(['toggle'])

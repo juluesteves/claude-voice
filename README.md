@@ -53,14 +53,14 @@ Inside Claude Code:
 
 ```
 /plugin marketplace add juluesteves/claude-voice
-/plugin install voice@julu-plugins
+/plugin install dictation@julu-plugins
 ```
 
 Or from the shell:
 
 ```
 claude plugin marketplace add juluesteves/claude-voice
-claude plugin install voice@julu-plugins
+claude plugin install dictation@julu-plugins
 ```
 
 The first run downloads the Whisper model (about 500 MB for `small`). When the
@@ -185,7 +185,7 @@ Nenhum áudio sai da sua máquina.
 
 ```
 /plugin marketplace add juluesteves/claude-voice
-/plugin install voice@julu-plugins
+/plugin install dictation@julu-plugins
 ```
 
 Na primeira execução o modelo Whisper é baixado (cerca de 500 MB no `small`).

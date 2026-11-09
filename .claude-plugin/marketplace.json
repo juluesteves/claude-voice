@@ -4,7 +4,7 @@
   "description": "Plugins and mods for Claude Code by JuLu",
   "plugins": [
     {
-      "name": "voice",
+      "name": "dictation",
       "displayName": "Voice Dictation",
       "source": "./",
       "description": "Speak instead of typing: hands-free dictation controlled by the mouse wheel button, transcribed locally with faster-whisper in any language",
