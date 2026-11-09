@@ -1,5 +1,6 @@
 {
   "name": "dictation",
+  "displayName": "Voice Dictation",
   "version": "0.2.0",
   "description": "Speak instead of typing: hands-free dictation controlled by the mouse wheel button, transcribed locally with faster-whisper in any language",
   "license": "MIT",
@@ -9,6 +10,10 @@
   },
   "homepage": "https://github.com/juluesteves/claude-voice",
   "repository": "https://github.com/juluesteves/claude-voice",
+  "documentationUrl": "https://github.com/juluesteves/claude-voice#readme",
+  "supportUrl": "https://github.com/juluesteves/claude-voice/issues",
+  "privacyPolicyUrl": "https://github.com/juluesteves/claude-voice/blob/main/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/juluesteves/claude-voice/blob/main/LICENSE",
   "keywords": [
     "voice",
     "dictation",

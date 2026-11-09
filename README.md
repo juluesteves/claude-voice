@@ -142,6 +142,10 @@ claude plugin validate . --strict      # manifest and marketplace checks
 Tests live in `tests/voice.test.tsx` and use the Claude Code plugin testing
 harness. Pull requests and issues are welcome.
 
+## Privacy
+
+Everything runs locally and nothing is sent anywhere. See [PRIVACY.md](PRIVACY.md).
+
 ## License
 
 [MIT](LICENSE) © 2026 Julio Esteves
