@@ -1,7 +1,7 @@
 {
   "name": "julu-plugins",
-  "owner": { "name": "JuLu", "url": "https://github.com/juluesteves" },
-  "description": "Plugins and mods for Claude Code by JuLu",
+  "owner": { "name": "Julio Esteves", "url": "https://github.com/juluesteves" },
+  "description": "Plugins and mods for Claude Code by Julio Esteves",
   "plugins": [
     {
       "name": "dictation",

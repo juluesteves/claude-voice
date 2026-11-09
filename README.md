@@ -144,7 +144,7 @@ harness. Pull requests and issues are welcome.
 
 ## License
 
-[MIT](LICENSE) © 2026 JuLu
+[MIT](LICENSE) © 2026 Julio Esteves
 
 ---
 
@@ -244,4 +244,4 @@ No menu de configuração do plugin (`/plugin` → *Voice Dictation* → *Config
 
 ## Licença
 
-[MIT](LICENSE) © 2026 JuLu
+[MIT](LICENSE) © 2026 Julio Esteves

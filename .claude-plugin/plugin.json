@@ -4,7 +4,7 @@
   "description": "Speak instead of typing: hands-free dictation controlled by the mouse wheel button, transcribed locally with faster-whisper in any language",
   "license": "MIT",
   "author": {
-    "name": "JuLu",
+    "name": "Julio Esteves",
     "url": "https://github.com/juluesteves"
   },
   "homepage": "https://github.com/juluesteves/claude-voice",
