@@ -79,6 +79,36 @@ band above the prompt says **"Ready"**, click the mouse wheel and talk.
 The mod and the process talk through JSON lines on stdout and a small signal file,
 so no sockets or ports are opened.
 
+## What this plugin does on your machine
+
+This plugin is a *mod*: it runs code inside Claude Code through the hooks module
+`hooks/register.tsx`. For transparency, here is everything it does.
+
+- **Programs it runs.** On every interactive session start (and again at the end of a
+  turn if the process has died) it spawns one Python process:
+  `python -X utf8 <plugin>/scripts/voiced.py --model <model> --language <lang>
+  --silence <s> --send-words <words> --cancel-words <words> --signal <plugin>/scripts/.voice-signal`.
+  That script imports `scripts/voice.py`, loads a faster-whisper model, records the
+  default microphone with `sounddevice` and listens to the mouse wheel button with
+  `pynput`. The `/dictate` command starts the same process if it is not running.
+  No other program, shell or command is executed.
+- **Network.** Nothing. The only download is the Whisper model, fetched by
+  faster-whisper from Hugging Face on first use. Audio and text never leave the machine.
+- **Files it writes.** Only inside the plugin's own `scripts/` folder:
+  `.voice-signal` (a one-word file, `toggle`/`send`/`cancel`, that the band buttons and
+  `/dictate` write and the Python process reads and deletes) and `voice.log` (a plain
+  text log of events for troubleshooting). It does not read or edit any project file,
+  build file, settings file or instructions file.
+- **Prompts it submits.** When you double-click the wheel, say a send word or press the
+  *Send* button, the mod submits the transcribed text **as your own prompt**, verbatim,
+  exactly as if you had typed it. It adds nothing to the text and submits nothing on its
+  own. Cancelled dictations are discarded.
+- **Hooks.** `session.start` registers `/dictate` and starts the process;
+  `turn.complete` restarts the process if it is down; `command.run` handles `/dictate`;
+  `ui.render` draws the band above the prompt with the recording state and buttons.
+- **State.** Three in-memory values under the plugin's state: phase, partial text and
+  the last submitted text. They are not persisted.
+
 ## Options
 
 Open the plugin configuration menu (`/plugin` → *Claude Voice* → *Configure*):
@@ -160,6 +190,36 @@ Nenhum áudio sai da sua máquina.
 
 Na primeira execução o modelo Whisper é baixado (cerca de 500 MB no `small`).
 Quando a faixa mostrar **"Pronto"**, clique na rodinha e fale.
+
+## O que este plugin faz na sua máquina
+
+Este plugin é um *mod*: executa código dentro do Claude Code pelo módulo de hooks
+`hooks/register.tsx`. Por transparência, aqui está tudo o que ele faz.
+
+- **Programas que executa.** Ao abrir cada sessão interativa (e de novo ao fim de um
+  turno, se o processo tiver morrido) inicia um processo Python:
+  `python -X utf8 <plugin>/scripts/voiced.py --model ... --language ... --silence ...
+  --send-words ... --cancel-words ... --signal <plugin>/scripts/.voice-signal`.
+  Esse script importa `scripts/voice.py`, carrega o modelo faster-whisper, grava o
+  microfone padrão com `sounddevice` e escuta o botão da rodinha com `pynput`.
+  O comando `/dictate` inicia o mesmo processo se ele não estiver rodando. Nenhum outro
+  programa, shell ou comando é executado.
+- **Rede.** Nada. O único download é o modelo Whisper, baixado pelo faster-whisper do
+  Hugging Face no primeiro uso. Áudio e texto nunca saem da máquina.
+- **Arquivos que escreve.** Só dentro da pasta `scripts/` do próprio plugin:
+  `.voice-signal` (arquivo de uma palavra, `toggle`/`send`/`cancel`, escrito pelos
+  botões e pelo `/dictate` e lido e apagado pelo processo Python) e `voice.log`
+  (log de eventos em texto). Não lê nem edita arquivos do projeto, de build, de
+  configuração ou de instruções.
+- **Prompts que envia.** Ao dar duplo clique, dizer uma palavra de envio ou apertar
+  *Enviar*, o mod envia o texto transcrito **como seu próprio prompt**, sem alterações,
+  como se você tivesse digitado. Não acrescenta nada e não envia nada por conta própria.
+  Ditados cancelados são descartados.
+- **Hooks.** `session.start` registra `/dictate` e inicia o processo; `turn.complete`
+  reinicia o processo se caiu; `command.run` atende `/dictate`; `ui.render` desenha a
+  faixa acima do prompt com o estado da gravação e os botões.
+- **Estado.** Três valores em memória: fase, texto parcial e último texto enviado.
+  Não são persistidos.
 
 ## Opções
 
