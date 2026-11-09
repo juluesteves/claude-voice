@@ -1,4 +1,4 @@
-"""Processo residente do mod Claude Voice: vive durante a sessao do Claude Code.
+"""Processo residente do mod Voice Dictation: vive durante a sessao do Claude Code.
 
 - Carrega o modelo faster-whisper uma vez e mantem o microfone aberto, com um
   pre-rolo de ~1 s, para nada do inicio da fala se perder.

@@ -1,8 +1,8 @@
-# Claude Voice — speak instead of typing in Claude Code
+# Voice Dictation — speak instead of typing in Claude Code
 
 [🇧🇷 Versão em português](#português)
 
-**Claude Voice** is a [Claude Code](https://code.claude.com) plugin (a *mod*) that adds
+**Voice Dictation** is a [Claude Code](https://code.claude.com) plugin (a *mod*) that adds
 hands-free voice dictation to the terminal. You talk, it types the prompt for you
 and sends it. Everything is controlled by the **mouse wheel button**, and the
 transcription runs **100% locally** on your CPU with
@@ -111,7 +111,7 @@ This plugin is a *mod*: it runs code inside Claude Code through the hooks module
 
 ## Options
 
-Open the plugin configuration menu (`/plugin` → *Claude Voice* → *Configure*):
+Open the plugin configuration menu (`/plugin` → *Voice Dictation* → *Configure*):
 
 | Option | Default | Meaning |
 | --- | --- | --- |
@@ -150,7 +150,7 @@ harness. Pull requests and issues are welcome.
 
 # Português
 
-**Claude Voice** é um plugin (*mod*) do [Claude Code](https://code.claude.com) que adiciona
+**Voice Dictation** é um plugin (*mod*) do [Claude Code](https://code.claude.com) que adiciona
 ditado por voz ao terminal. Você fala, ele escreve o prompt e envia. Tudo é
 controlado pelo **botão da rodinha do mouse**, e a transcrição roda **100%
 local** na sua CPU com [faster-whisper](https://github.com/SYSTRAN/faster-whisper).
@@ -223,7 +223,7 @@ Este plugin é um *mod*: executa código dentro do Claude Code pelo módulo de h
 
 ## Opções
 
-No menu de configuração do plugin (`/plugin` → *Claude Voice* → *Configure*):
+No menu de configuração do plugin (`/plugin` → *Voice Dictation* → *Configure*):
 
 | Opção | Padrão | Significado |
 | --- | --- | --- |
